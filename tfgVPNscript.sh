@@ -622,6 +622,9 @@ function debInstall(){
 	wget  https://swupdate.openvpn.org/community/releases/openvpn-2.5.6.tar.gz && tar -xvzf openvpn-2.5.6.tar.gz
 	#tar -xvzf openpvn-2.5.6.tar.gz
 	[ -d openvpn-2.5.6 ] && cd openvpn-2.5.6 && ./configure && make && make install
+	mv vpnSystemd/* /usr/lib/systemd/system/ && sysCheck=$(systemctl status openvpn | grep Loaded)
+	#[ ! -z "$sysCheck"] && rm -rf vpnSystemd || echo " Problems setting up systemd service" && exit
+
 	#./configure
 	#make
 	#make install
