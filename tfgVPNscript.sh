@@ -94,6 +94,7 @@ function checkOS() {
 
 function checkOpenVpn() {
 	vpnPath=$(which openvpn)
+	echo $vpnPath
 }
 
 function initialCheck() {
@@ -623,7 +624,7 @@ function debInstall(){
 	#tar -xvzf openpvn-2.5.6.tar.gz
 	[ -d openvpn-2.5.6 ] && cd openvpn-2.5.6 && ./configure && make && make install
 	cd ../ && mv vpnSystemd/* /usr/lib/systemd/system/ && sysCheck=$(systemctl status openvpn | grep Loaded)
-	[ ! -z "$sysCheck"] && rm -rf vpnSystemd || echo " Problems setting up systemd service" && exit
+	[ ! -z "$sysCheck" ] && rm -rf vpnSystemd || echo " Problems setting up systemd service" && exit
 
 
 	#./configure
@@ -1272,8 +1273,8 @@ function removeOpenVPN() {
 		# Cleanup
 		systemctl disable iptables-openvpn
 		rm /etc/systemd/system/iptables-openvpn.service
-		systemctl daemon-reload
 		rm /etc/iptables/add-openvpn-rules.sh
+		systemctl daemon-reload
 		rm /etc/iptables/rm-openvpn-rules.sh
 
 		# SELinux
@@ -1355,6 +1356,7 @@ initialCheck
 
 
 # Check if OpenVPN is already installed
+[ -z "$vpnOk" ] && echo "not installed : $vpnOk" ||.echo "installed : $vpnOk"
 if [[ ! -z "$vpnOk" ]]; then
 	echo -e "Openvpn Already Installed \n ------------ \n"
 	menu
