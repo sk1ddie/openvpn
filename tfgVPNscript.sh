@@ -95,7 +95,7 @@ function checkOS() {
 
 function checkOpenVpn() {
 	vpnOk=$(which openvpn)
-	echo $vpnOk
+
 }
 
 function initialCheck() {
@@ -1326,7 +1326,7 @@ function menu() {
 	echo "     The git repository is available at: https://github.com/sk1ddie/openvpn-wizard"
 	echo ""
 	echo "  ---> It looks like OpenVPN is already installed. $bar"
-	echo " What do you want to do?"
+	echo " What do you want to do?\n"
 	echo -e "   1) Add a new user\n"
 	echo -e "   2) Revoke existing user\n"
 	echo -e "   3) Remove OpenVPN\n"
@@ -1351,17 +1351,28 @@ function menu() {
 	esac
 }
 
+versionCheck(){
+	vpnVersion=$(openvpn --version | head -n 1 | cut -d' ' -f2)
+	mVers=$(echo $vpnVersion | cut -d'.' -f1)
+	sVers=$(echo $vpnVersion | cut -d'.' -f2)
+	ssVers=$(echo $vpnVersion | cut -d'.' -f3)
+	[ $sVers -le 5 ] && [ $sVers -le 2 ] && warn="true"
+	[ $vpnVersion == "2.4.11" ] && warn=""
+	[ ! -z "$warn" ] && echo "WARNING!! Version may be vulnerable, you should update OpenVpn " && exit
+}
+
 # Check for root, TUN, OS...
 initialCheck
 
-
 # Check if OpenVPN is already installed
-[ -z "$vpnOk" ] && echo "not installed : $vpnOk" ||.echo "installed : $vpnOk"
+
 if [[ ! -z "$vpnOk" ]]; then
 	echo -e "Openvpn Already Installed \n ------------ \n"
+	versionCheck
 	menu
 else
 	installOpenVpn
 	checkOpenVpn
-	[ ! -z "$vpnOk" ] && confOpenVpn
+	[ ! -z "$vpnOk" ] &&  echo " Installation completed Succesfully " && read -p "Proceed with server configuration ? [y/n]" ch
+	[ "$ch" == "y" ] && confOpenVPN || exit
 fi
