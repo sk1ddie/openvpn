@@ -623,8 +623,8 @@ function debInstall(){
 	#tar -xvzf openpvn-2.5.6.tar.gz
 	[ -d openvpn-2.5.6 ] && cd openvpn-2.5.6 && ./configure && make && make install
 	cd ../ && mv vpnSystemd/* /usr/lib/systemd/system/ && sysCheck=$(systemctl status openvpn | grep Loaded)
+	[ ! -z "$sysCheck"] && rm -rf vpnSystemd || echo " Problems setting up systemd service" && exit
 
-	#[ ! -z "$sysCheck"] && rm -rf vpnSystemd || echo " Problems setting up systemd service" && exit
 
 	#./configure
 	#make
@@ -1319,9 +1319,9 @@ function removeOpenVPN() {
 	fi
 }
 
-function manageMenu() {
-	echo "Welcome to OpenVPN-install!"
-	echo "The git repository is available at: https://github.com/angristan/openvpn-install"
+function menu() {
+	echo "Welcome to OpenVPN-Wizard!"
+	echo "The git repository is available at: https://github.com/sk1ddie/openvpn-wizard"
 	echo ""
 	echo "It looks like OpenVPN is already installed."
 	echo ""
@@ -1356,7 +1356,8 @@ initialCheck
 
 # Check if OpenVPN is already installed
 if [[ ! -z "$vpnOk" ]]; then
-	manageMenu
+	echo -e "Openvpn Already Installed \n ------------ \n"
+	menu
 else
 	installOpenVpn
 	checkOpenVpn
