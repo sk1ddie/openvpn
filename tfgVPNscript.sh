@@ -4,6 +4,7 @@
 # Secure OpenVPN server installer for Debian, Ubuntu, CentOS, Amazon Linux 2, Fedora, Oracle Linux 8, Arch Linux, Rocky Linux and AlmaLinux.
 # https://github.com/angristan/openvpn-install
 
+bar=$(echo -e "\n________________________________________\n")
 function isRoot() {
 	if [ "$EUID" -ne 0 ]; then
 		return 1
@@ -93,8 +94,8 @@ function checkOS() {
 }
 
 function checkOpenVpn() {
-	vpnPath=$(which openvpn)
-	echo $vpnPath
+	vpnOk=$(which openvpn)
+	echo $vpnOk
 }
 
 function initialCheck() {
@@ -635,7 +636,7 @@ function debInstall(){
 }
 
 function installOpenVpn() {
-	if [[ -z "$vpnPath" ]]; then
+	if [[ -z "$vpnOk" ]]; then
 		if [[ $OS =~ (debian|ubuntu) ]]; then
 			debInstall
 		elif [[ $OS == 'centos' ]]; then
@@ -1321,16 +1322,15 @@ function removeOpenVPN() {
 }
 
 function menu() {
-	echo "Welcome to OpenVPN-Wizard!"
-	echo "The git repository is available at: https://github.com/sk1ddie/openvpn-wizard"
+	echo -e "             Welcome to OpenVPN-Wizard!"
+	echo "     The git repository is available at: https://github.com/sk1ddie/openvpn-wizard"
 	echo ""
-	echo "It looks like OpenVPN is already installed."
-	echo ""
-	echo "What do you want to do?"
-	echo "   1) Add a new user"
-	echo "   2) Revoke existing user"
-	echo "   3) Remove OpenVPN"
-	echo "   4) Exit"
+	echo "  ---> It looks like OpenVPN is already installed. $bar"
+	echo " What do you want to do?"
+	echo -e "   1) Add a new user\n"
+	echo -e "   2) Revoke existing user\n"
+	echo -e "   3) Remove OpenVPN\n"
+	echo -e "   4) Exit $bar"
 	until [[ $MENU_OPTION =~ ^[1-4]$ ]]; do
 		read -rp "Select an option [1-4]: " MENU_OPTION
 	done
