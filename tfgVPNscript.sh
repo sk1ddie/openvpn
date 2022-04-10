@@ -1288,8 +1288,9 @@ function removeOpenVPN() {
 		fi
 
 		if [[ $OS =~ (debian|ubuntu) ]]; then
-			apt-get remove --purge -y openvpn
-			find -type f -name "openvpn" --delete
+			aptVpn=$(dpkg -l | grep openvpn )
+			[ ! -z "$aptVpn" ] && apt-get remove --purge -y openvpn
+			find -type f -name "openvpn" -delete
 			find -type f -name "openvpn*service" -delete
 			if [[ -e /etc/apt/sources.list.d/openvpn.list ]]; then
 				rm /etc/apt/sources.list.d/openvpn.list
@@ -1370,12 +1371,12 @@ initialCheck
 # Check if OpenVPN is already installed
 
 if [[ ! -z "$vpnOk" ]]; then
-	echo -e "Openvpn Already Installed \n ------------ \n"
 	versionCheck
 	menu
 else
 	installOpenVpn
 	checkOpenVpn
+	echo "Vpn Installed : $vpnOk"
 	[ ! -z "$vpnOk" ] &&  echo " Installation completed Succesfully " && read -p "Proceed with server configuration ? [y/n]" ch
 	[ "$ch" == "y" ] && confOpenVPN || exit
 fi
