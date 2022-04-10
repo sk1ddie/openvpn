@@ -1289,11 +1289,13 @@ function removeOpenVPN() {
 
 		if [[ $OS =~ (debian|ubuntu) ]]; then
 			apt-get remove --purge -y openvpn
+			find -type f -name "openvpn" --delete
+			find -type f -name "openvpn*service" -delete
 			if [[ -e /etc/apt/sources.list.d/openvpn.list ]]; then
 				rm /etc/apt/sources.list.d/openvpn.list
 				apt-get update
 			fi
-			find -type f -name "openvpn" -delete
+
 		elif [[ $OS == 'arch' ]]; then
 			pacman --noconfirm -R openvpn
 		elif [[ $OS =~ (centos|amzn|oracle) ]]; then
