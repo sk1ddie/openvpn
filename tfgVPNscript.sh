@@ -621,11 +621,11 @@ function installQuestions() {
 function debInstall(){
 	apt update -y && apt upgrade -y
 	apt install -y wget gcc make libssl-dev liblz4-dev lz4 liblzo2-dev libpam-dev ca-certificates gnupg curl
-	wget  https://swupdate.openvpn.org/community/releases/openvpn-2.5.6.tar.gz && tar -xvzf openvpn-2.5.6.tar.gz
+	wget  https://swupdate.openvpn.org/community/releases/openvpn-2.5.6.tar.gz && tar -xvzf openvpn-2.5.6.tar.gz && rm -f openvpn-2.5.6.tar.gz
 	#tar -xvzf openpvn-2.5.6.tar.gz
 	[ -d openvpn-2.5.6 ] && cd openvpn-2.5.6 && ./configure && make && make install
 	cd ../ && mv vpnSystemd/* /usr/lib/systemd/system/ && sysCheck=$(systemctl status openvpn | grep Loaded)
-	[ ! -z "$sysCheck" ] && rm -rf vpnSystemd || echo " Problems setting up systemd service" && exit
+	[ ! -z "$sysCheck" ] && rm -rf vpnSystemd || echo " Problems setting up systemd service"
 
 
 	#./configure
